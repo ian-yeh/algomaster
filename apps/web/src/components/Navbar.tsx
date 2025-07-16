@@ -7,12 +7,6 @@ const Navbar = () => {
         <Link href="/" className="text-2xl font-bold">
           Home
         </Link>
-        <Link href="/about" className="text-2xl font-bold">
-          About
-        </Link>
-        <Link href="/services" className="text-2xl font-bold">
-          Services
-        </Link>
       </div>
     </nav>
   )

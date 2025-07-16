@@ -1,4 +1,4 @@
-import Navbar from '@/components/Navbar';
+//import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import './global.css';
 
@@ -18,7 +18,6 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AuthProvider>
-          <Navbar />
           <main className='relative overflow-hidden'>
             {children}
           </main>
