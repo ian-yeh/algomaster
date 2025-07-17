@@ -28,7 +28,52 @@
         "options": {
           "passWithNoTests": true
         }
+      },
+      "db:migrate": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "drizzle-kit migrate",
+          "cwd": "apps/api"
+        }
+      },
+      "db:generate": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "drizzle-kit generate",
+          "cwd": "apps/api"
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "{workspaceRoot}/apps/api/drizzle.config.ts"
+        ],
+        "outputs": [
+          "{workspaceRoot}/apps/api/src/db/migrations",
+          "{workspaceRoot}/apps/api/src/db/schema.ts"
+        ]
+      },
+      "db:push": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "drizzle-kit push",
+          "cwd": "apps/api"
+        }
+      },
+      "db:studio": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "drizzle-kit studio",
+          "cwd": "apps/api"
+        }
       }
     }
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.1",
+    "drizzle-orm": "^0.44.3",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.4"
   }
 }
