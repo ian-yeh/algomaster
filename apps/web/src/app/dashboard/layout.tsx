@@ -1,4 +1,3 @@
-import { AuthCheck } from '@/components/auth/AuthCheck';
 
 export default function DashboardLayout({
   children,
@@ -6,11 +5,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AuthCheck>
-      <div className="">
-        <nav>Dashboard Navigation</nav>
-        <main>{children}</main>
-      </div>
-    </AuthCheck>
+    <div className="">
+      <nav>Dashboard Navigation</nav>
+      <main>{children}</main>
+    </div>
   );
 }

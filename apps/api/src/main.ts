@@ -14,6 +14,11 @@ app.get('/api/auth', (req, res) => {
   res.send({ user: { id: 1, name: 'John Doe', email: 'ianyeh7@gmail.com' } });
 });
 
+app.get('/api/auth/me', (req, res) => {
+  // Simulate fetching the authenticated user's profile
+  res.send({ user: { id: 1, name: 'John Doe', email: 'ianyeh7@gmail.com' } });
+});
+
 const port = process.env.PORT || 3333;
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);

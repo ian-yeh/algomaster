@@ -1,7 +1,20 @@
 import { SignIn } from "@stackframe/stack";
 import Link from "next/link";
+import { useStackApp } from "@stackframe/stack";
+import { redirect } from "next/navigation";
 
 export default function LoginPage() {
+  const app = useStackApp();
+  const user = app.useUser();
+
+  if (user === null) {
+    console.warn("User is null, redirecting to login page");
+  } else if (user === undefined) {
+    console.warn("User state is undefined, redirecting to loading page");
+  } else {
+    redirect("/dashboard/home");
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
       <div className="max-w-md w-full">

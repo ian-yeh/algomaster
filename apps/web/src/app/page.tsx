@@ -1,15 +1,18 @@
 "use client";
 
-import { useAuth } from "@/contexts/AuthContext";
 import { redirect } from "next/navigation";
+import { useStackApp } from "@stackframe/stack";
 
 export default function Index() {
-  const { user } = useAuth();
+  const app = useStackApp();
+  const user = app.useUser();
 
-  if (user) {
-    redirect("/dashboard");
-  } else {
+  if (user === null) {
     redirect("/auth/login");
+  } else if (user === undefined) {
+    redirect("/auth/loading");
+  } else {
+    redirect("/dashboard/home");
   }
 
   return (

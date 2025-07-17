@@ -1,24 +1,25 @@
 'use client';
 
-import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { useStackApp } from '@stackframe/stack';
 
 export const PublicRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
+  const app = useStackApp();
+  const user = app.useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && user) {
+    if (user === undefined) {
       router.push('/dashboard');
     }
-  }, [user, loading, router]);
+  }, [user, router]);
 
-  if (loading) {
+  if (user === undefined) {
     return <div>Loading...</div>;
   }
 
-  if (user) {
+  if (user === null) {
     return null; // Don't show anything while redirecting
   }
 
