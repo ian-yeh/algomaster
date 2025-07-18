@@ -1,21 +1,30 @@
 "use client";
-
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useStackApp } from "@stackframe/stack";
+import { useEffect } from "react";
 
-export default function Index() {
+function Index() {
   const app = useStackApp();
   const user = app.useUser();
+  const router = useRouter();
 
-  if (user === null) {
-    redirect("/auth/login");
-  } else if (user === undefined) {
-    redirect("/auth/loading");
-  } else {
-    redirect("/dashboard/home");
-  }
+  console.log("hello, i'm in index.", user);
+
+  useEffect(() => {
+    if (user === null) {
+      router.push("/auth/login");
+    } else if (user === undefined) {
+      router.push("/auth/loading");
+    } else {
+      router.push("/dashboard/home");
+    }
+  }, [user, router]);
 
   return (
-    <></>
+    <div className="flex items-center justify-center min-h-screen">
+      <div>Loading...</div>
+    </div>
   );
 }
+
+export default Index;

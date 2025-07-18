@@ -1,18 +1,21 @@
 import { SignIn } from "@stackframe/stack";
 import Link from "next/link";
 import { useStackApp } from "@stackframe/stack";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/router";
 
-export default function LoginPage() {
+function LoginPage() {
   const app = useStackApp();
   const user = app.useUser();
+  const router = useRouter();
 
   if (user === null) {
     console.warn("User is null, redirecting to login page");
+    router.push("/auth/login");
   } else if (user === undefined) {
     console.warn("User state is undefined, redirecting to loading page");
+    router.push("/auth/loading");
   } else {
-    redirect("/dashboard/home");
+    router.push("/dashboard/home");
   }
 
   return (
@@ -73,3 +76,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+export default LoginPage;

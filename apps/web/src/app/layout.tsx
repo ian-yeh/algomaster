@@ -16,12 +16,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body><StackProvider app={stackServerApp}><StackTheme>
-          <main className='relative overflow-hidden'>
-            {children}
-          </main>
-          <Footer />
-      </StackTheme></StackProvider></body>
+      <body>
+        <StackProvider app={stackServerApp}>
+          <StackTheme>
+            <main className="relative overflow-hidden">{children}</main>
+            <Footer />
+          </StackTheme>
+        </StackProvider>
+      </body>
     </html>
   );
 }
