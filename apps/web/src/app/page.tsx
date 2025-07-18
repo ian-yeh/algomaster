@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useStackApp } from "@stackframe/stack";
 import { useEffect } from "react";
 
-function Index() {
+const Index = () => {
   const app = useStackApp();
   const user = app.useUser();
   const router = useRouter();

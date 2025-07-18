@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useStackApp } from "@stackframe/stack";
 import { useRouter } from "next/router";
 
-function LoginPage() {
+const LoginPage = () => {
   const app = useStackApp();
   const user = app.useUser();
   const router = useRouter();

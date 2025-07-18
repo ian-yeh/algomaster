@@ -4,7 +4,7 @@ import { useStackApp } from "@stackframe/stack";
 import { useEffect } from "react";
 import { redirect } from "next/navigation";
 
-export default function AuthLoadingPage() {
+const AuthLoadingPage = () => {
   const app = useStackApp();
   const user = app.useUser();
 
@@ -34,3 +34,5 @@ export default function AuthLoadingPage() {
     </div>
   )
 }
+
+export default AuthLoadingPage;
