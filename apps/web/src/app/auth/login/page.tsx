@@ -1,22 +1,27 @@
+"use client";
 import { SignIn } from "@stackframe/stack";
 import Link from "next/link";
 import { useStackApp } from "@stackframe/stack";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const LoginPage = () => {
   const app = useStackApp();
   const user = app.useUser();
   const router = useRouter();
 
-  if (user === null) {
-    console.warn("User is null, redirecting to login page");
-    router.push("/auth/login");
-  } else if (user === undefined) {
-    console.warn("User state is undefined, redirecting to loading page");
-    router.push("/auth/loading");
-  } else {
-    router.push("/dashboard/home");
-  }
+  useEffect(() => {
+    if (user === null) {
+      console.warn("User is null, redirecting to login page");
+      router.push("/auth/login");
+    } else if (user === undefined) {
+      console.warn("User state is undefined, redirecting to loading page");
+      router.push("/auth/loading");
+    } else {
+      router.push("/dashboard/home");
+    }
+
+  }, [user, router])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">

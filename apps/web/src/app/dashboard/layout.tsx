@@ -19,6 +19,14 @@ export default function DashboardLayout({
   const user = app.useUser();
   const router = useRouter();
 
+  const handleSignOut = () => {
+    app.redirectToSignOut();
+
+    router.push("/auth/login");
+
+    return;
+  }
+
   useEffect(() => {
     if (user === undefined) {
       router.push("/auth/loading");
@@ -45,33 +53,44 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="bg-gray-100 p-4">
-        <nav>
-          <ul className="flex space-x-4 items-center">
-            <li>{userInfo.displayName}</li>
-            <li>
-              {userInfo.profileImageUrl ? (
-                <Image 
-                  src={userInfo.profileImageUrl} 
-                  alt={`${userInfo.displayName}'s profile`} 
-                  width={40} 
-                  height={40}
-                  className="rounded-full"
-                  priority={true}
-                />
-              ) : (
-                <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                  <span className="text-gray-600 text-sm">
-                    {userInfo.displayName.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-              )}
-            </li>
-          </ul>
-        </nav>
+    <div className="min-h-screen">
+      <div className='flex justify-between bg-gray-100 p-4'>
+        <div>
+          <nav>
+            <ul className="flex space-x-4 items-center">
+              <li>{userInfo.displayName}</li>
+              <li>
+                {userInfo.profileImageUrl ? (
+                  <Image 
+                    src={userInfo.profileImageUrl} 
+                    alt={`${userInfo.displayName}'s profile`} 
+                    width={40} 
+                    height={40}
+                    className="rounded-full"
+                    priority={true}
+                  />
+                ) : (
+                  <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+                    <span className="text-gray-600 text-sm">
+                      {userInfo.displayName.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                )}
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div>
+          <button
+            onClick={handleSignOut}
+            className="ml-4 px-4 py-2 bg-red-500 text-white rounded"
+          >
+            Sign Out
+          </button>
+        </div>
+
       </div>
-      <div className="flex-1">
+      <div className="flex">
         <main>{children}</main>
       </div>
     </div>
