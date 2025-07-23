@@ -1,21 +1,18 @@
-import { pgTable, uuid, text, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, integer, timestamp, unique } from 'drizzle-orm/pg-core';
 
-export const userProfiles = pgTable('user_profiles', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  userId: text('user_id').notNull().unique(), // Links to Neon Auth user
-  displayName: text('display_name'),
-  bio: text('bio'),
-  avatarUrl: text('avatar_url'),
-  preferences: jsonb('preferences'), // JSON for settings
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+export const users = pgTable('users', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  email: varchar('email', { length: 255 }).notNull(),
+  age: integer('age'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => {
+  return {
+    uniqueEmail: unique().on(table.email),
+  };
 });
 
-// Your other app tables
-export const posts = pgTable('posts', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  userId: text('user_id').notNull(), // References Neon Auth user
-  title: text('title').notNull(),
-  content: text('content'),
-  createdAt: timestamp('created_at').defaultNow(),
-});
+// Export type for TypeScript (optional)
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
