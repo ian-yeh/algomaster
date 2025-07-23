@@ -1,21 +1,30 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useStackApp } from "@stackframe/stack";
+import { useEffect } from "react";
 
-export default function Index() {
+const Index = () => {
+  const app = useStackApp();
+  const user = app.useUser();
   const router = useRouter();
-  const handleLearnMore = () => {
-    router.push("/about");
-  };
+
+  console.log("hello, i'm in index.", user);
+
+  useEffect(() => {
+    if (user === null) {
+      router.push("/auth/login");
+    } else if (user === undefined) {
+      router.push("/auth/loading");
+    } else {
+      router.push("/dashboard/home");
+    }
+  }, [user, router]);
 
   return (
-    <div>
-      <h1>Welcome!</h1>
-      <button 
-        onClick={handleLearnMore}
-        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-colors duration-200"
-      >
-        Learn More
-      </button>
+    <div className="flex items-center justify-center min-h-screen">
+      <div>Loading...</div>
     </div>
   );
 }
+
+export default Index;

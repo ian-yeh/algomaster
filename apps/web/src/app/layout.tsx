@@ -1,4 +1,6 @@
-import Navbar from '@/components/Navbar';
+//import Navbar from '@/components/Navbar';
+import { StackProvider, StackTheme } from "@stackframe/stack";
+import { stackServerApp } from "../stack";
 import Footer from '@/components/Footer';
 import './global.css';
 
@@ -15,11 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        <main className='relative overflow-hidden'>
-          {children}
-        </main>
-        <Footer />
+        <StackProvider app={stackServerApp}>
+          <StackTheme>
+            <main className="relative overflow-hidden">{children}</main>
+            <Footer />
+          </StackTheme>
+        </StackProvider>
       </body>
     </html>
   );
