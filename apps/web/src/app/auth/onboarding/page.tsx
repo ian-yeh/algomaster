@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 const Index = () => {
   const router = useRouter();
 
+  // TODO: create a user with the actual associated name and email to the account
   const handleCreateUser = async() => {
     try {
       const response = await fetch('http://localhost:3001/api/users', {
