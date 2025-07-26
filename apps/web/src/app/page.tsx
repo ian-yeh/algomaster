@@ -8,8 +8,6 @@ const Index = () => {
   const user = app.useUser();
   const router = useRouter();
 
-  console.log("hello, i'm in index.", user);
-
   useEffect(() => {
     if (user === null) {
       router.push("/auth/login");
