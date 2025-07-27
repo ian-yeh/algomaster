@@ -1,28 +1,59 @@
 "use client";
 import { SignIn } from "@stackframe/stack";
 import Link from "next/link";
-import { useStackApp } from "@stackframe/stack";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useUser } from "@stackframe/stack";
+import { useCurrentUser } from "@/contexts/UserContext";
 
 const LoginPage = () => {
-  const app = useStackApp();
-  const user = app.useUser();
+  const stackUser = useUser(); // Stack auth user
+  const { currentUser, isLoading } = useCurrentUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (user === null) {
-      console.warn("User is null, redirecting to login page");
-      router.push("/auth/login");
-    } else if (user === undefined) {
-      console.warn("User state is undefined, redirecting to loading page");
-      router.push("/auth/loading");
-    } else {
-      router.push("/dashboard/home");
+    if (isLoading) {
+      return;
     }
 
-  }, [user, router])
+    if (stackUser) {
+      if (currentUser) {
+        router.push("/dashboard/home");
+      } else {
+        router.push("/auth/onboarding");
+      }
+    }
+  }, [stackUser, currentUser, isLoading, router]);
 
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
+        <div className="max-w-md w-full text-center">
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Checking authentication...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // If already authenticated, show loading while redirecting
+  if (stackUser) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
+        <div className="max-w-md w-full text-center">
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Redirecting...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login form only if not authenticated
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
       <div className="max-w-md w-full">
@@ -39,7 +70,7 @@ const LoginPage = () => {
         {/* Auth Card */}
         <div className="bg-white rounded-xl shadow-lg p-8">
           <SignIn />
-          
+
           {/* Divider */}
           <div className="mt-6 text-center">
             <div className="relative">
@@ -52,9 +83,8 @@ const LoginPage = () => {
                 </span>
               </div>
             </div>
-            
             <div className="mt-4">
-              <Link 
+              <Link
                 href="/auth/register"
                 className="text-indigo-600 hover:text-indigo-500 font-medium transition-colors"
               >
@@ -80,6 +110,6 @@ const LoginPage = () => {
       </div>
     </div>
   );
-}
+};
 
 export default LoginPage;

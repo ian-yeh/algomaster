@@ -1,12 +1,12 @@
 {
-  "id": "8a3d2f10-c17c-4a19-a04f-62ac04bf61bc",
+  "id": "7e471b4a-1337-40b4-a7c5-08836e13ed3a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "user_schema.users": {
+    "public.users": {
       "name": "users",
-      "schema": "user_schema",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
@@ -18,11 +18,17 @@
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "email": {
           "name": "email",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "age": {
+          "name": "age",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         }
@@ -30,16 +36,22 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     }
   },
   "enums": {},
-  "schemas": {
-    "user_schema": "user_schema"
-  },
+  "schemas": {},
   "sequences": {},
   "roles": {},
   "policies": {},

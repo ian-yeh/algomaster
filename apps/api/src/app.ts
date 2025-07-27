@@ -44,7 +44,7 @@ app.get('/api/users/exists', async (req, res) => {
       });
 
       if (!existingUser) {
-        return res.status(200).json({ exists: false, message: 'User not found' });
+        return res.status(200).json({ exists: false, user: { id: 0, email: null, name: null, age: null} });
       }
       return res.status(200).json({ exists: true, user: existingUser });
     }
