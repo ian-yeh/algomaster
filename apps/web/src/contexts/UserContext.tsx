@@ -12,20 +12,26 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
+console.log("DOES THIS EXIST");
+
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const user = useUser();
   const router = useRouter();
 
-  const fetchUser = useCallback(async () => {
-    try {
-      setIsLoading(true);
+  console.log("CONTEXTDOES THIS EXIST");
 
-      if (!user || !user.primaryEmail) {
-        setCurrentUser(null);
-        return;
-      }
+  const fetchUser = useCallback(async () => {
+    setIsLoading(true);
+
+    if (!user || !user.primaryEmail || user === undefined) {
+      console.log("false");
+      setCurrentUser(null);
+      setIsLoading(false);
+      return;
+    }
+    try {
       console.log("FETCHING USER", user?.primaryEmail);
       const url = `http://localhost:3001/api/users/exists?email=${encodeURIComponent(user.primaryEmail)}`;
 
@@ -61,12 +67,24 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, [user, router]);
 
   useEffect(() => {
-    if (!user) {
-      router.push("/auth/login");
+    console.log("👀 useEffect ran");
+    console.log("user from useUser():", user);
+
+    // Wait until useUser() resolves to either null or a real object
+    if (user === undefined) {
+      console.log("🔄 Waiting for user to resolve...");
+      setIsLoading(false);
       return;
     }
 
-    fetchUser();
+    if (!user || !user.primaryEmail) {
+      console.log("🚪 No user, redirecting to /auth/login");
+      router.push("/auth/login");
+      setIsLoading(false);
+      return;
+    }
+
+    fetchUser(); // ✅ Only run if user exists
   }, [user, router, fetchUser]);
 
   const refetchUser = async () => {

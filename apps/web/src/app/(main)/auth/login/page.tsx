@@ -13,6 +13,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isLoading) {
+      console.log("still loading", currentUser);
       return;
     }
 

@@ -1,3 +1,4 @@
+'use client';
 import { StackTheme } from "@stackframe/stack";
 import Footer from '@/components/Footer';
 import { UserProvider } from "@/contexts/UserContext";

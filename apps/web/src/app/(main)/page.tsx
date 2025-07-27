@@ -1,17 +1,16 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useStackApp } from "@stackframe/stack";
 import { useEffect } from "react";
+import { useCurrentUser } from "@/contexts/UserContext";
 
 const Index = () => {
-  const app = useStackApp();
-  const user = app.useUser();
+  const user = useCurrentUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (user === null) {
+    if (user.currentUser === null) {
       router.push("/auth/login");
-    } else if (user === undefined) {
+    } else if (user.currentUser === undefined) {
       router.push("/auth/loading");
     } else {
       router.push("/dashboard/home");
