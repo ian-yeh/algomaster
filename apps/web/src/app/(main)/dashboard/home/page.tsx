@@ -21,8 +21,7 @@ export default function Dashboard() {
       return;
     }
 
-    console.log(user);
-    console.log("USER EXISTS");
+    console.log("USER", user.currentUser);
   }, [user, router]);
 
   // Show loading screen while fetching
@@ -65,7 +64,13 @@ export default function Dashboard() {
           </button>
 
           {/* Settings */}
-          <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+          <button
+            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            onClick={() => {
+              router.push("/dashboard/settings");
+              console.log("button pressed")
+            }}
+          >
             <Settings size={20} />
           </button>
 

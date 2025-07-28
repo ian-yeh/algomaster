@@ -1,6 +1,5 @@
 import { StackProvider } from "@stackframe/stack";
 import { stackServerApp } from "../stack";
-import Footer from '@/components/Footer';
 import './global.css';
 
 export const metadata = {
@@ -18,7 +17,6 @@ export default function RootLayout({
       <body>
         <StackProvider app={stackServerApp}>
           <main className="relative overflow-hidden">{children}</main>
-          <Footer />
         </StackProvider>
       </body>
     </html>

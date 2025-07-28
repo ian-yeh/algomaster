@@ -62,8 +62,8 @@ app.get('/api/users/exists', async (req, res) => {
 });
 
 app.post('/api/users', async (req, res) => {
+  console.log("RECEIVING BODY", req.body)
   try {
-    console.log("RECEIVING BODY", req.body)
     const { name, email, age } = req.body;
 
     const newUser = {

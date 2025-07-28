@@ -14,10 +14,11 @@ const Index = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!user || user === null || user === undefined) {
+    if (!user.currentUser || user === null || user === undefined) {
       router.push("/auth/login");
       return;
     }
+    console.log(user.currentUser);
   }, [user, router])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,6 +53,8 @@ const Index = () => {
 
     setIsLoading(true);
     setError('');
+
+    console.log(user.currentUser?.email)
 
     try {
       const response = await fetch('http://localhost:3001/api/users', {

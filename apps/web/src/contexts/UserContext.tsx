@@ -12,27 +12,21 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-console.log("DOES THIS EXIST");
-
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const user = useUser();
   const router = useRouter();
 
-  console.log("CONTEXTDOES THIS EXIST");
-
   const fetchUser = useCallback(async () => {
     setIsLoading(true);
 
     if (!user || !user.primaryEmail || user === undefined) {
-      console.log("false");
       setCurrentUser(null);
       setIsLoading(false);
       return;
     }
     try {
-      console.log("FETCHING USER", user?.primaryEmail);
       const url = `http://localhost:3001/api/users/exists?email=${encodeURIComponent(user.primaryEmail)}`;
 
       const response = await fetch(url, {
@@ -42,8 +36,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         },
       });
 
-      console.log("response went thru")
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -52,7 +44,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
       if (!data.exists) {
         console.log("User does not exist in database");
-        setCurrentUser(null);
+        setCurrentUser({
+          id: 0,
+          email: user.primaryEmail,
+          name: null,
+          age: null,
+        });
         router.push("/auth/onboarding");
       } else {
         console.log("User exists in database");
@@ -67,7 +64,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, [user, router]);
 
   useEffect(() => {
-    console.log("👀 useEffect ran");
     console.log("user from useUser():", user);
 
     // Wait until useUser() resolves to either null or a real object
@@ -84,7 +80,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    fetchUser(); // ✅ Only run if user exists
+    fetchUser();
   }, [user, router, fetchUser]);
 
   const refetchUser = async () => {
