@@ -1,7 +1,7 @@
 import express from 'express';
 import * as path from 'path';
 import { db } from './db/db';
-import { users } from './db/schema';
+import { userProfiles } from './db/schema';
 import cors from 'cors';
 import { eq } from 'drizzle-orm';
 
@@ -39,18 +39,18 @@ app.get('/api/users/exists', async (req, res) => {
 
     // Type guard for email parameter
     if (typeof email === 'string' && email.trim()) {
-      const existingUser = await db.query.users.findFirst({
-        where: eq(users.email, email),
+      const existingUser = await db.query.userProfiles.findFirst({
+        where: eq(userProfiles.email, email),
       });
 
       if (!existingUser) {
-        return res.status(200).json({ exists: false, user: { id: 0, email: null, name: null, age: null} });
+        return res.status(200).json({ exists: false, user: null });
       }
       return res.status(200).json({ exists: true, user: existingUser });
     }
 
     // If no email provided or invalid, return all users
-    const allUsers = await db.query.users.findMany();
+    const allUsers = await db.query.userProfiles.findMany();
     return res.status(200).json(allUsers);
   } catch (error: unknown) {
     let message = 'Unknown error';
@@ -64,15 +64,21 @@ app.get('/api/users/exists', async (req, res) => {
 app.post('/api/users', async (req, res) => {
   console.log("RECEIVING BODY", req.body)
   try {
-    const { name, email, age } = req.body;
+    const { stackUserId, firstName, lastName, email, age, summary, headline, location, industry } = req.body;
 
     const newUser = {
-      name,
+      stackUserId,
       email,
+      firstName,
+      lastName,
       age,
+      summary,
+      headline,
+      location,
+      industry,
     };
 
-    await db.insert(users).values(newUser);
+    await db.insert(userProfiles).values(newUser);
 
     res.status(201).json({ success: true, user: newUser });
   } catch (error: unknown) {
@@ -85,5 +91,19 @@ app.post('/api/users', async (req, res) => {
     res.status(500).json({ error: message })
   }
 });
+
+app.get('/api/profile/:stackUserId', async (req, res) => {
+  try {
+    console.log(req.params.stackUserId);
+    const profile = await db.query.userProfiles.findFirst({
+      where: eq(userProfiles.stackUserId, req.params.stackUserId)
+    });
+    res.json(profile);
+
+  } catch (error) {
+    console.error(error) ;
+  }
+});
+
 
 export default app;

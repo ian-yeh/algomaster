@@ -5,6 +5,7 @@ import { useStackApp } from '@stackframe/stack';
 import { useRouter } from 'next/navigation';
 import { Bell, Settings, LogOut } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -15,16 +16,14 @@ export default function Dashboard() {
   const handleSignOut = () => {
     stackApp.redirectToSignOut();
   };
+
   useEffect(() => {
-    if (!user.currentUser) {
+    if (!user.userProfile) {
       router.push("/auth/login");
       return;
     }
-
-    console.log("USER", user.currentUser);
   }, [user, router]);
 
-  // Show loading screen while fetching
   if (user?.isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen min-w-full bg-gray-50">
@@ -36,7 +35,7 @@ export default function Dashboard() {
     );
   }
 
-  if (!user?.currentUser) {
+  if (!user?.userProfile) {
     return null;
   }
 
@@ -45,8 +44,8 @@ export default function Dashboard() {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
-  const userName = user.currentUser?.name || user.currentUser?.name || 'User';
-  const userEmail = user.currentUser?.email || user.currentUser?.email || 'No email';
+  const userName = user.userProfile?.firstName || 'User';
+  const userEmail = user.userProfile?.email || 'No email';
   const userAvatar = stackUser?.profileImageUrl;
 
   return (
@@ -81,17 +80,21 @@ export default function Dashboard() {
               <p className="text-xs text-gray-500">{userEmail}</p>
             </div>
             {userAvatar ? (
-              <Image
-                src={userAvatar}
-                alt="User Avatar"
-                width={32}
-                height={32}
-                className="w-8 h-8 rounded-full object-cover"
-              />
+              <Link href={'/dashboard/profile'}>
+                <Image
+                  src={userAvatar}
+                  alt="User Avatar"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+              </Link>
             ) : (
-              <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-medium">
-                {getUserInitials(userName)}
-              </div>
+              <Link href={'/dashboard/profile'}>
+                <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-medium">
+                  {getUserInitials(userName)}
+                </div>
+              </Link>
             )}
           </div>
 
@@ -154,7 +157,7 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-500 mb-1">User ID</label>
-                    <p className="text-gray-600 text-sm font-mono">{user.currentUser?.id || 'N/A'}</p>
+                    <p className="text-gray-600 text-sm font-mono">{user.userProfile?.id || 'N/A'}</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-500 mb-1">Status</label>

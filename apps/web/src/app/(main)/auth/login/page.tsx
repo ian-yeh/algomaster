@@ -7,24 +7,24 @@ import { useUser } from "@stackframe/stack";
 import { useCurrentUser } from "@/contexts/UserContext";
 
 const LoginPage = () => {
-  const stackUser = useUser(); // Stack auth user
-  const { currentUser, isLoading } = useCurrentUser();
+  const stackUser = useUser();
+  const { userProfile, isLoading } = useCurrentUser();
   const router = useRouter();
 
   useEffect(() => {
     if (isLoading) {
-      console.log("still loading", currentUser);
+      console.log("still loading", userProfile?.firstName, userProfile?.lastName);
       return;
     }
 
     if (stackUser) {
-      if (currentUser) {
+      if (userProfile?.firstName && userProfile) {
         router.push("/dashboard/home");
       } else {
         router.push("/auth/onboarding");
       }
     }
-  }, [stackUser, currentUser, isLoading, router]);
+  }, [stackUser, userProfile, isLoading, router]);
 
   // Show loading state while checking authentication
   if (isLoading) {

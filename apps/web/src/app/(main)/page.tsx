@@ -8,9 +8,9 @@ const Index = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (user.currentUser === null) {
+    if (user.userProfile === null) {
       router.push("/auth/login");
-    } else if (user.currentUser === undefined) {
+    } else if (user.userProfile === undefined) {
       router.push("/auth/loading");
     } else {
       router.push("/dashboard/home");
