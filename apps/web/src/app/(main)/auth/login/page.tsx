@@ -18,6 +18,7 @@ const LoginPage = () => {
     }
 
     if (stackUser) {
+      console.log(stackUser)
       if (userProfile?.firstName && userProfile) {
         router.push("/dashboard/home");
       } else {

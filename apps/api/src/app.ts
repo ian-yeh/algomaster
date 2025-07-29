@@ -92,6 +92,81 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
+app.put('/api/users', async (req, res) => {
+  console.log("UPDATING USER", req.body)
+  try {
+    const { 
+      id, 
+      stackUserId, 
+      firstName, 
+      lastName, 
+      email, 
+      age, 
+      summary, 
+      headline, 
+      location, 
+      industry, 
+      profilePictureUrl, 
+      bannerImageUrl,
+    } = req.body;
+
+    if (!id || !stackUserId) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'User ID and stackUserId are required for updates' 
+      });
+    }
+
+    const updateData = {
+      firstName,
+      lastName,
+      email,
+      age,
+      summary,
+      headline,
+      location,
+      industry,
+      profilePictureUrl,
+      bannerImageUrl,
+      updatedAt: new Date(), // Always use current timestamp for updates
+    };
+
+    // Remove undefined values to avoid overwriting with null
+    const cleanUpdateData = Object.fromEntries(
+      Object.entries(updateData).filter(([_, value]) => value !== undefined)
+    );
+
+    const updatedUser = await db
+      .update(userProfiles)
+      .set(cleanUpdateData)
+      .where(eq(userProfiles.id, id))
+      .returning();
+
+    if (updatedUser.length === 0) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'User not found' 
+      });
+    }
+
+    return res.status(200).json({ 
+      success: true, 
+      user: updatedUser[0] 
+    });
+  } catch (error: unknown) {
+    console.error('Update error:', error);
+    let message = 'Unknown error';
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    return res.status(500).json({ 
+      success: false, 
+      error: message 
+    });
+  }
+});
+
 app.get('/api/profile/:stackUserId', async (req, res) => {
   try {
     console.log(req.params.stackUserId);

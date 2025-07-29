@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { User, MapPin, Briefcase, Edit3, Save, X } from 'lucide-react';
 import Link from 'next/link';
 import { useCurrentUser } from '@/contexts/UserContext';
@@ -8,26 +8,48 @@ const ProfilePage = () => {
   const user = useCurrentUser();
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState({
-    firstName: user.userProfile?.firstName || '',
-    lastName: user.userProfile?.lastName || '',
-    headline: user.userProfile?.headline || '',
-    location: user.userProfile?.location || '',
-    industry: user.userProfile?.industry || '',
-    summary: user.userProfile?.summary || '',
+    firstName: '',
+    lastName: '',
+    headline: '',
+    location: '',
+    industry: '',
+    summary: '',
   });
 
   const [editedProfile, setEditedProfile] = useState({ ...profile });
+
+  const { updateProfile } = user;
+
+  // Update profile state when userProfile changes
+  useEffect(() => {
+    if (user.userProfile) {
+      const newProfile = {
+        firstName: user.userProfile.firstName || '',
+        lastName: user.userProfile.lastName || '',
+        headline: user.userProfile.headline || '',
+        location: user.userProfile.location || '',
+        industry: user.userProfile.industry || '',
+        summary: user.userProfile.summary || '',
+      };
+      setProfile(newProfile);
+      setEditedProfile(newProfile);
+    }
+  }, [user.userProfile]);
 
   const handleEdit = () => {
     setIsEditing(true);
     setEditedProfile({ ...profile });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    await updateProfile({
+      ...editedProfile,
+      profilePictureUrl: '',
+      bannerImageUrl: '',
+      createdAt: new Date(),
+    });
     setProfile({ ...editedProfile });
     setIsEditing(false);
-    // Here you would make API call to save
-    // await fetch(`/api/profile/${stackUserId}`, { method: 'PUT', body: JSON.stringify(editedProfile) })
   };
 
   const handleCancel = () => {
@@ -41,6 +63,17 @@ const ProfilePage = () => {
       [field]: value
     }));
   };
+
+  // Show loading state while user data is being fetched
+  if (user.isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 bg-white">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg text-gray-600">Loading profile...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white">

@@ -45,6 +45,8 @@ export default function Dashboard() {
   };
 
   const userName = user.userProfile?.firstName || 'User';
+  const userLastName = user.userProfile?.lastName || '';
+  const fullName = userLastName ? `${userName} ${userLastName}` : userName;
   const userEmail = user.userProfile?.email || 'No email';
   const userAvatar = stackUser?.profileImageUrl;
 
@@ -76,7 +78,7 @@ export default function Dashboard() {
           {/* User Info */}
           <div className="flex items-center space-x-3 pl-4 border-l border-gray-200">
             <div className="text-right">
-              <p className="text-sm font-medium text-gray-800">{userName}</p>
+              <p className="text-sm font-medium text-gray-800">{fullName}</p>
               <p className="text-xs text-gray-500">{userEmail}</p>
             </div>
             {userAvatar ? (
@@ -121,7 +123,7 @@ export default function Dashboard() {
           {/* Welcome Section */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              Welcome back, {userName}!
+              Welcome back, {fullName}!
             </h1>
             <p className="text-gray-600">
               Here&apos;s what&apos;s happening with your account today.
@@ -148,16 +150,16 @@ export default function Dashboard() {
               <div className="flex-1">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-500 mb-1">Name</label>
-                    <p className="text-gray-800 font-medium">{userName}</p>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Full Name</label>
+                    <p className="text-gray-800 font-medium">{fullName}</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-500 mb-1">Email</label>
                     <p className="text-gray-800">{userEmail}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-500 mb-1">User ID</label>
-                    <p className="text-gray-600 text-sm font-mono">{user.userProfile?.id || 'N/A'}</p>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Industry</label>
+                    <p className="text-gray-800">{user.userProfile?.industry || 'Not specified'}</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-500 mb-1">Status</label>
@@ -169,6 +171,14 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+
+          {/* Summary Section */}
+          {user.userProfile?.summary && (
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8 w-full">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Professional Summary</h2>
+              <p className="text-gray-700 leading-relaxed">{user.userProfile.summary}</p>
+            </div>
+          )}
 
           {/* Recent Activity */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-full">

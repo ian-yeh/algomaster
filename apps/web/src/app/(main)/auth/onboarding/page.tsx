@@ -21,7 +21,7 @@ const Index = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (user === null || user === undefined) {
+    if (user === null || user.userProfile?.stackUserId === null) {
       router.push("/auth/login");
       return;
     }
@@ -98,43 +98,26 @@ const Index = () => {
 
   const handleCreateUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!validateForm()) return;
-
     setIsLoading(true);
     setError('');
-
     try {
-      const response = await fetch('http://localhost:3001/api/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          stackUserId: formData.stackUserId.trim(),
-          firstName: formData.firstName.trim(),
-          lastName: formData.lastName.trim(),
-          email: formData.email.trim(),
-          age: parseInt(formData.age),
-          headline: formData.headline.trim(),
-          summary: formData.summary.trim(),
-          location: formData.location.trim(),
-          industry: formData.industry.trim()
-        })
+      await user.updateProfile({
+        stackUserId: formData.stackUserId.trim(),
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+        age: parseInt(formData.age),
+        headline: formData.headline.trim(),
+        summary: formData.summary.trim(),
+        location: formData.location.trim(),
+        industry: formData.industry.trim()
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        console.log("User successfully created");
-        await user.refetchProfile();
-        router.push('/dashboard/home');
-      } else {
-        setError(data.message || 'Failed to create user');
-      }
+      await user.refetchProfile();
+      router.push('/dashboard/home');
     } catch (error) {
+      setError('Failed to create user');
       console.error(error);
-      setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);
     }

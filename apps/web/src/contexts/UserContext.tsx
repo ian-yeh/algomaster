@@ -10,18 +10,37 @@ interface UserContextType {
   //userPosts: Post[] | null;
   isLoading: boolean;
   refetchProfile: () => Promise<void>;
+  updateProfile: (profileUpdates: Partial<UserProfile>) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const router = useRouter();
+  const user = useUser();
+  const [userProfile, setUserProfile] = useState<UserProfile | null>({
+    id: 0,
+    stackUserId: user?.id || '',
+    email: user?.primaryEmail || null,
+    age: null,
+    firstName: null,
+    lastName: null,
+    headline: null,
+    summary: null,
+    location: null,
+    profilePictureUrl: null,
+    bannerImageUrl: null,
+    industry: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    workExperiences: undefined,
+    educations: undefined,
+    userSkills: undefined,
+  });
   //const [userSettings, setUserSettings] = useState<UserSettings | null>(null);
   //const [userPosts, setUserPosts] = useState<Post[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const user = useUser();
-  const router = useRouter();
 
   const fetchProfile = useCallback(async () => {
     setIsLoading(true);
@@ -33,6 +52,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
     try {
       const url = `http://localhost:3001/api/users/exists?email=${encodeURIComponent(user.primaryEmail)}`;
+      console.log("fetching user")
 
       const response = await fetch(url, {
         method: 'GET',
@@ -40,6 +60,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           'Content-Type': 'application/json',
         },
       });
+      console.log("finished fetch");
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -81,6 +102,42 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [user, router]);
 
+  const updateProfile = async (profileUpdates: Partial<UserProfile>) => {
+    setIsLoading(true);
+    try {
+      if (!user || !user.primaryEmail || !userProfile) {
+        throw new Error("User not authenticated or profile not loaded");
+      }
+      
+      // Merge the existing profile with the updates
+      const updatedProfile = {
+        ...userProfile,
+        ...profileUpdates,
+        email: profileUpdates.email || user.primaryEmail,
+        stackUserId: profileUpdates.stackUserId || user.id,
+      };
+      
+      const response = await fetch('http://localhost:3001/api/users', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedProfile),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setUserProfile(data.user);
+        // Optionally, you can redirect or show a success message here
+      } else {
+        throw new Error(data.message || 'Failed to update user');
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   useEffect(() => {
     if (user === undefined) {
       setIsLoading(false);
@@ -106,6 +163,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         userProfile,
         isLoading,
         refetchProfile,
+        updateProfile,
       }}>
       {children}
     </UserContext.Provider>
