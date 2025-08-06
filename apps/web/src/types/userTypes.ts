@@ -77,5 +77,5 @@ export type Post = {
   sharesCount: number;
   createdAt: Date;
   updatedAt: Date;
-  author?: UserProfile; // For when you fetch posts with author info
+  author?: UserProfile;
 }
