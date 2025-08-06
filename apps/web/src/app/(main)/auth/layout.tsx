@@ -6,8 +6,8 @@ function AuthLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="auth-container">
-      <div className="auth-wrapper">
+    <div className="">
+      <div className="">
         {children}
       </div>
     </div>

@@ -1,8 +1,8 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, MessageCircle, Bell, User } from 'lucide-react';
+import { Search, MessageCircle, Bell, MenuIcon, Home, User, Info, Settings, Mail } from 'lucide-react';
 
 interface HeaderProps {
   userAvatar?: string;
@@ -10,6 +10,7 @@ interface HeaderProps {
 }
 
 export default function Header({ userAvatar, userName }: HeaderProps) {
+  const [menu, setMenu] = useState(false)
   const getUserInitials = (name: string) => {
     if (!name) return 'U';
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
@@ -29,7 +30,7 @@ export default function Header({ userAvatar, userName }: HeaderProps) {
               <h1 className='text-xl font-semibold'>Algobase</h1>
             </div>
           </Link>
-          
+
           {/* Search Bar */}
           <div className='relative'>
             <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
@@ -74,8 +75,75 @@ export default function Header({ userAvatar, userName }: HeaderProps) {
             )}
             <span className='text-xs font-medium'>Me</span>
           </Link>
+
+          <div className='flex flex-col items-center gap-1 hover:text-blue-600 transition-colors'>
+            <button onClick={() => (setMenu(!menu))}>
+              <MenuIcon className='h-6 w-6'/>
+            </button>
+            <span className='text-xs font-medium'>Training</span>
+          </div>
         </div>
       </div>
+
+      {menu && (
+        <div>
+          {/* Overlay - takes up 85% of screen */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-60 z-1000"
+            onClick={() => setMenu(false)}
+          />
+
+          {/* Menu - takes up 15% of right screen */}
+          <div className="fixed top-0 right-0 h-full w-[15%] bg-white z-1000 shadow-xl">
+            <div className="p-6 space-y-4">
+              <Link
+                href="/"
+                className="flex items-center gap-3 p-3 hover:bg-gray-100 rounded"
+                onClick={() => setMenu(false)}
+              >
+                <Home size={20} />
+                <span>Home</span>
+              </Link>
+
+              <Link
+                href="/profile"
+                className="flex items-center gap-3 p-3 hover:bg-gray-100 rounded"
+                onClick={() => setMenu(false)}
+              >
+                <User size={20} />
+                <span>Profile</span>
+              </Link>
+
+              <Link
+                href="/settings"
+                className="flex items-center gap-3 p-3 hover:bg-gray-100 rounded"
+                onClick={() => setMenu(false)}
+              >
+                <Settings size={20} />
+                <span>Settings</span>
+              </Link>
+
+              <Link
+                href="/contact"
+                className="flex items-center gap-3 p-3 hover:bg-gray-100 rounded"
+                onClick={() => setMenu(false)}
+              >
+                <Mail size={20} />
+                <span>Contact</span>
+              </Link>
+
+              <Link
+                href="/about"
+                className="flex items-center gap-3 p-3 hover:bg-gray-100 rounded"
+                onClick={() => setMenu(false)}
+              >
+                <Info size={20} />
+                <span>About</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
-} 
+}
